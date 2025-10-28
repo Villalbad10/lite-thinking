@@ -1,4 +1,4 @@
-package com.lite_thinking.app;
+package com.lite_thinking.app.app;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
