@@ -1,11 +1,12 @@
 import { useState } from 'react';
+import { toast } from 'react-hot-toast';
 import http from '../config/axios';
 import useAuthStore from '../store/authStore';
 
 const Register = ({ onSwitchToLogin }) => {
   const login = useAuthStore((state) => state.login);
   const [formData, setFormData] = useState({
-    name: '',
+    fullName: '',
     email: '',
     password: '',
     confirmPassword: '',
@@ -16,10 +17,10 @@ const Register = ({ onSwitchToLogin }) => {
   const validate = () => {
     const newErrors = {};
     
-    if (!formData.name.trim()) {
-      newErrors.name = 'Nombre es requerido';
-    } else if (formData.name.length < 2) {
-      newErrors.name = 'El nombre debe tener al menos 2 caracteres';
+    if (!formData.fullName.trim()) {
+      newErrors.fullName = 'Nombre es requerido';
+    } else if (formData.fullName.length < 2) {
+      newErrors.fullName = 'El nombre debe tener al menos 2 caracteres';
     }
     
     if (!formData.email) {
@@ -30,7 +31,7 @@ const Register = ({ onSwitchToLogin }) => {
     
     if (!formData.password) {
       newErrors.password = 'Contraseña es requerida';
-    } else if (formData.password.length < 6) {
+    } else if (formData.password.length < 4) {
       newErrors.password = 'La contraseña debe tener al menos 6 caracteres';
     }
     
@@ -57,11 +58,20 @@ const Register = ({ onSwitchToLogin }) => {
       const { confirmPassword, ...dataToSend } = formData;
       const response = await http.post('/api/v1/lite/auth/register', dataToSend);
       login(response.data.token, response.data.user);
-      window.location.href = '/dashboard';
-    } catch (error) {
-      setErrors({ 
-        submit: error.response?.data?.message || 'Error al registrarse' 
+      toast.success('Registro exitoso. ¡Bienvenido!');
+      // Ajusta la ruta si deseas redirigir después del registro
+      // window.location.href = '/empresas';
+      setFormData({
+        fullName: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
       });
+      setErrors({});
+    } catch (error) {
+      const msg = error.response?.data?.message || 'Error al registrarse';
+      setErrors({ submit: msg });
+      toast.error(msg);
     } finally {
       setIsLoading(false);
     }
@@ -91,22 +101,22 @@ const Register = ({ onSwitchToLogin }) => {
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
-          <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+          <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-2">
             Nombre completo
           </label>
           <input
             type="text"
-            id="name"
-            name="name"
-            value={formData.name}
+            id="fullName"
+            name="fullName"
+            value={formData.fullName}
             onChange={handleChange}
             className={`w-full px-4 py-3 rounded-lg border ${
-              errors.name ? 'border-red-500' : 'border-gray-300'
+              errors.fullName ? 'border-red-500' : 'border-gray-300'
             } focus:outline-none focus:ring-2 focus:ring-blue-500 transition`}
             placeholder="Juan Pérez"
           />
-          {errors.name && (
-            <p className="mt-1 text-sm text-red-600">{errors.name}</p>
+          {errors.fullName && (
+            <p className="mt-1 text-sm text-red-600">{errors.fullName}</p>
           )}
         </div>
 
