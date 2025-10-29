@@ -1,8 +1,9 @@
 import axios from 'axios';
+import useAuthStore from '../store/authStore';
 
 const baseURL = 'http://localhost:8081';
 
-const apiClient = axios.create({
+const http = axios.create({
   baseURL,
   headers: {
     'Content-Type': 'application/json',
@@ -10,9 +11,11 @@ const apiClient = axios.create({
 });
 
 // Request interceptor
-apiClient.interceptors.request.use(
+http.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('token');
+    // Get token from Zustand store
+    const token = useAuthStore.getState().token;
+    
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -24,19 +27,17 @@ apiClient.interceptors.request.use(
 );
 
 // Response interceptor
-apiClient.interceptors.response.use(
+http.interceptors.response.use(
   (response) => {
     return response;
   },
   (error) => {
     if (error.response?.status === 401) {
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
+      useAuthStore.getState().logout();
       window.location.href = '/login';
     }
     return Promise.reject(error);
   }
 );
 
-export default apiClient;
-
+export default http;

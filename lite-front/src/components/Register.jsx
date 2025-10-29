@@ -1,7 +1,9 @@
 import { useState } from 'react';
-import apiClient from '../config/axios';
+import http from '../config/axios';
+import useAuthStore from '../store/authStore';
 
 const Register = ({ onSwitchToLogin }) => {
+  const login = useAuthStore((state) => state.login);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -53,9 +55,8 @@ const Register = ({ onSwitchToLogin }) => {
     
     try {
       const { confirmPassword, ...dataToSend } = formData;
-      const response = await apiClient.post('/api/v1/lite/auth/register', dataToSend);
-      localStorage.setItem('token', response.data.token);
-      localStorage.setItem('user', JSON.stringify(response.data.user));
+      const response = await http.post('/api/v1/lite/auth/register', dataToSend);
+      login(response.data.token, response.data.user);
       window.location.href = '/dashboard';
     } catch (error) {
       setErrors({ 
