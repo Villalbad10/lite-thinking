@@ -30,16 +30,16 @@ const Empresas = () => {
         setLoading(true);
         const params = { page, size, sort };
         const { data } = await http.get('/api/v1/lite/empresa/list', { params });
-        const items = Array.isArray(data) ? data : data?.items || data?.content || [];
+        const items = data?.content || [];
         setEmpresas(items);
-        const tp = data?.totalPages ?? data?.page?.totalPages ?? data?.total_pages ?? 1;
-        const te = data?.totalElements ?? data?.page?.totalElements ?? data?.total ?? items.length;
-        setTotalPages(tp || 1);
-        setTotalElements(typeof te === 'number' ? te : items.length);
+        setTotalPages(data?.totalPages ?? 0);
+        setTotalElements(data?.totalElements ?? 0);
         setError('');
       } catch (err) {
         setError(err.response?.data?.message || 'No se pudo cargar las empresas');
         setEmpresas([]);
+        setTotalPages(0);
+        setTotalElements(0);
       } finally {
         setLoading(false);
       }

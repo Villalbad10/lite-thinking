@@ -1,5 +1,6 @@
 package com.lite_thinking.app.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -34,11 +35,13 @@ public class Empresa {
 
     @Column(nullable = false, insertable = false, columnDefinition = "Boolean default false")
     private boolean deleted = false;
-    
+
     @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private Set<Orden> ordenes;
-    
+
     @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private Set<Producto> productos;
 }
 

@@ -1,5 +1,6 @@
 package com.lite_thinking.app.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,6 +26,7 @@ public class Categoria {
     private String descripcion;
     
     @ManyToMany(mappedBy = "categorias", cascade = CascadeType.MERGE)
+    @JsonIgnore
     private Set<Producto> productos;
 }
 

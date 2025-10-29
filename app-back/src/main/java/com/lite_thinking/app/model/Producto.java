@@ -1,5 +1,7 @@
 package com.lite_thinking.app.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -33,9 +35,10 @@ public class Producto {
     
     @Column(nullable = false)
     private Integer stock;
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_empresa", nullable = false)
+    @JsonBackReference
     private Empresa empresa;
     
     @ManyToMany(cascade = CascadeType.MERGE)
@@ -44,9 +47,11 @@ public class Producto {
         joinColumns = @JoinColumn(name = "id_producto"),
         inverseJoinColumns = @JoinColumn(name = "id_categoria")
     )
+    @JsonIgnore
     private Set<Categoria> categorias;
     
     @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private Set<OrdenItem> ordenItems;
 }
 
