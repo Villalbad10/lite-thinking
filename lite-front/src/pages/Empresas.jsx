@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { toast } from 'react-hot-toast';
 import http from '../config/axios';
 import Paginator from '../components/Paginator';
 import EmpresaCard from '../components/EmpresaCard';
@@ -123,6 +124,7 @@ const Empresas = () => {
           setShowCreate(false);
           setPage(0);
           setReloadKey((k) => k + 1);
+          toast.success('Empresa creada exitosamente');
         }}
       />
       <EmpresaCreateModal
@@ -132,6 +134,7 @@ const Empresas = () => {
         onUpdated={() => {
           setEditEmpresa(null);
           setReloadKey((k) => k + 1);
+          toast.success('Empresa actualizada exitosamente');
         }}
       />
       <ConfirmModal
@@ -148,12 +151,9 @@ const Empresas = () => {
             await http.delete(`/api/v1/lite/empresa/delete/${id}`);
             setDeleteConfirm(null);
             setReloadKey((k) => k + 1);
+            toast.success('Empresa eliminada exitosamente');
           } catch (e) {
-            setAlertMessage({
-              title: 'Error',
-              message: e.response?.data?.message || 'No se pudo eliminar la empresa',
-              variant: 'error',
-            });
+            toast.error(e.response?.data?.message || 'No se pudo eliminar la empresa');
             setDeleteConfirm(null);
           }
         }}

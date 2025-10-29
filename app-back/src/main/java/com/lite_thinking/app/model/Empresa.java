@@ -31,6 +31,9 @@ public class Empresa {
     
     @Column(nullable = false, unique = true)
     private String nit;
+
+    @Column(nullable = false, insertable = false, columnDefinition = "Boolean default false")
+    private boolean deleted = false;
     
     @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Orden> ordenes;
