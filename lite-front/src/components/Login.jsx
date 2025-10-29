@@ -15,41 +15,41 @@ const Login = ({ onSwitchToRegister }) => {
 
   const validate = () => {
     const newErrors = {};
-    
+
     if (!formData.email) {
       newErrors.email = 'Email es requerido';
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       newErrors.email = 'Email no es válido';
     }
-    
+
     if (!formData.password) {
       newErrors.password = 'Contraseña es requerida';
     } else if (formData.password.length < 4) {
       newErrors.password = 'La contraseña debe tener al menos 6 caracteres';
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!validate()) {
       return;
     }
-    
+
     setIsLoading(true);
-    
+
     try {
       const response = await http.post('/api/v1/lite/auth/login', formData);
       login(response.data.token, response.data.user);
-      console.log(response.data.token);
-      console.log(response.data);
+      //console.log(response.data.token);
+      //console.log(response.data);
       navigate('/empresas', { replace: true });
     } catch (error) {
-      setErrors({ 
-        submit: error.response?.data?.message || 'Error al iniciar sesión' 
+      setErrors({
+        submit: error.response?.data?.message || 'Error al iniciar sesión'
       });
     } finally {
       setIsLoading(false);
@@ -61,7 +61,7 @@ const Login = ({ onSwitchToRegister }) => {
       ...formData,
       [e.target.name]: e.target.value,
     });
-    
+
     // Clear error when user starts typing
     if (errors[e.target.name]) {
       setErrors({
@@ -89,9 +89,8 @@ const Login = ({ onSwitchToRegister }) => {
             name="email"
             value={formData.email}
             onChange={handleChange}
-            className={`w-full px-4 py-3 rounded-lg border ${
-              errors.email ? 'border-red-500' : 'border-gray-300'
-            } focus:outline-none focus:ring-2 focus:ring-blue-500 transition`}
+            className={`w-full px-4 py-3 rounded-lg border ${errors.email ? 'border-red-500' : 'border-gray-300'
+              } focus:outline-none focus:ring-2 focus:ring-blue-500 transition`}
             placeholder="tu@email.com"
           />
           {errors.email && (
@@ -109,9 +108,8 @@ const Login = ({ onSwitchToRegister }) => {
             name="password"
             value={formData.password}
             onChange={handleChange}
-            className={`w-full px-4 py-3 rounded-lg border ${
-              errors.password ? 'border-red-500' : 'border-gray-300'
-            } focus:outline-none focus:ring-2 focus:ring-blue-500 transition`}
+            className={`w-full px-4 py-3 rounded-lg border ${errors.password ? 'border-red-500' : 'border-gray-300'
+              } focus:outline-none focus:ring-2 focus:ring-blue-500 transition`}
             placeholder="••••••••"
           />
           {errors.password && (
