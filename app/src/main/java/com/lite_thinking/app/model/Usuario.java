@@ -27,6 +27,9 @@ public class Usuario{
     @Column(name = "password")
     private String password;
 
+    @Column(name = "admin")
+    private boolean admin = false;
+
     @Column(name = "deleted", insertable = false, nullable = false, columnDefinition = "Boolean default false")
     private Boolean deleted = false;
 }

@@ -2,7 +2,9 @@ package com.lite_thinking.app.controller;
 
 import com.lite_thinking.app.dto.AuthRequestDTO;
 import com.lite_thinking.app.dto.AuthResponseDTO;
+import com.lite_thinking.app.dto.UserInfoDTO;
 import com.lite_thinking.app.dto.UserRegistrationDTO;
+import com.lite_thinking.app.mapper.UsuarioMapper;
 import com.lite_thinking.app.model.Usuario;
 import com.lite_thinking.app.security.JwtUtil;
 import com.lite_thinking.app.service.UsuarioService;
@@ -15,13 +17,11 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/api/v1/lite/auth")
 public class AuthController {
 
@@ -39,6 +39,9 @@ public class AuthController {
 
     @Autowired
     private UsuarioService userService;
+    
+    @Autowired
+    private UsuarioMapper usuarioMapper;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody AuthRequestDTO authRequest) {
@@ -52,8 +55,17 @@ public class AuthController {
 
             UserDetails userDetails = userDetailsService.loadUserByUsername(authRequest.getEmail());
             String jwt = jwtUtil.generateToken(userDetails);
+            
+            // Obtener información completa del usuario
+            Usuario usuario = userService.findByEmail(authRequest.getEmail());
+            UserInfoDTO userInfo = usuarioMapper.toUserInfoDTO(usuario);
+            
+            // Construir la respuesta con token y información del usuario
+            AuthResponseDTO response = new AuthResponseDTO();
+            response.setToken(jwt);
+            response.setUser(userInfo);
 
-            return ResponseEntity.ok(new AuthResponseDTO(jwt));
+            return ResponseEntity.ok(response);
 
         } catch (BadCredentialsException e) {
             log.error("iniciar error " + e);
