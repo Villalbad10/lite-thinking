@@ -1,13 +1,15 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import http from '../config/axios';
 import Paginator from '../components/Paginator';
 import ProductoCreateModal from '../components/ProductoCreateModal';
+import ProductoCard from '../components/ProductoCard';
 import useAuthStore from '../store/authStore';
 
 const Productos = () => {
   const { idEmpresa } = useParams();
+  const { state } = useLocation();
   const [productos, setProductos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -54,7 +56,7 @@ const Productos = () => {
     <div className="min-h-screen bg-slate-50 p-6">
       <div className="max-w-4xl mx-auto">
         <div className="flex items-center justify-between mb-4">
-          <h1 className="text-2xl font-bold">Productos</h1>
+          <h1 className="text-2xl font-bold">Productos{state?.empresaNombre ? ` - ${state.empresaNombre}` : ''}</h1>
           <div className="flex items-center gap-2">
             <select
               className="border rounded px-2 py-1 text-sm"
@@ -82,9 +84,7 @@ const Productos = () => {
         ) : (
           <div className="bg-white rounded-xl shadow divide-y">
             {productos.map((p) => (
-              <div key={p.idProducto || p.id || p._id} className="p-4">
-                <div className="font-semibold">{p.nombre || p.name || 'Producto'}</div>
-              </div>
+              <ProductoCard key={p.idProducto } producto={p} />
             ))}
           </div>
         )}

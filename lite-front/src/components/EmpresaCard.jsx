@@ -9,7 +9,7 @@ const EmpresaCard = ({ empresa, onEdit, onDelete }) => {
   const navigate = useNavigate();
 
   return (
-    <div className="bg-white rounded-xl shadow p-4 flex items-center justify-between cursor-pointer hover:bg-gray-50" onClick={() => navigate(`/empresas/${id}/productos`)}>
+    <div className="bg-white rounded-xl shadow p-4 flex items-center justify-between cursor-pointer hover:bg-gray-50" onClick={() => navigate(`/empresas/${id}/productos`, { state: { empresaNombre: nombre } })}>
       <div>
         <div className="font-semibold">{nombre} - {empresa.nit}</div>
         {identificador ? (
