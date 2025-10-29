@@ -28,7 +28,6 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .accountExpired(false)
                 .accountLocked(false)
                 .credentialsExpired(false)
-                .roles("USER")
                 .build();
     }
 }

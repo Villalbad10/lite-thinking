@@ -18,7 +18,7 @@ public class Empresa {
     @Column(name = "id_empresa")
     private Long idEmpresa;
     
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String nombre;
     
     @Column(nullable = false)

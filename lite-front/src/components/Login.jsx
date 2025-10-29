@@ -1,9 +1,11 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import http from '../config/axios';
 import useAuthStore from '../store/authStore';
 
 const Login = ({ onSwitchToRegister }) => {
   const login = useAuthStore((state) => state.login);
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -44,7 +46,7 @@ const Login = ({ onSwitchToRegister }) => {
       login(response.data.token, response.data.user);
       console.log(response.data.token);
       console.log(response.data);
-      //window.location.href = '/dashboard';
+      navigate('/empresas', { replace: true });
     } catch (error) {
       setErrors({ 
         submit: error.response?.data?.message || 'Error al iniciar sesión' 

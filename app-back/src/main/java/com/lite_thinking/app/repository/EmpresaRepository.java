@@ -8,6 +8,8 @@ import java.util.Optional;
 
 @Repository
 public interface EmpresaRepository extends JpaRepository<Empresa, Long> {
+	boolean existsByNit(String nit);
 
+	boolean existsByNombre(String nombre);
 }
 
