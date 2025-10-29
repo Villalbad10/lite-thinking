@@ -1,17 +1,19 @@
 import { Route } from 'react-router-dom';
 import ProtectedRoute from '../components/ProtectedRoute';
-import Empresas from '../components/Empresas';
+import PrivateLayout from '../components/PrivateLayout';
+import Empresas from '../pages/Empresas';
 
 const PrivateRoutes = () => {
   return (
     <Route
-      path="/empresas"
       element={
         <ProtectedRoute>
-          <Empresas />
+          <PrivateLayout />
         </ProtectedRoute>
       }
-    />
+    >
+      <Route path="/empresas" element={<Empresas />} />
+    </Route>
   );
 };
 
