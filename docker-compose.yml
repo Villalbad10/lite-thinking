@@ -1,0 +1,47 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: lite_db
+    environment:
+      - POSTGRES_DB=lite_db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=admin
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app-back:
+    build: ./app-back
+    image: app-back:latest
+    container_name: app-back
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - db_password=admin
+      - db_user=postgres
+      - db_url=jdbc:postgresql://db:5432/lite_db
+      - port=8081
+    ports:
+      - "8081:8081"
+
+  lite-front:
+    build: ./lite-front
+    image: lite-front:latest
+    container_name: lite-front
+    depends_on:
+      - app-back
+    ports:
+      - "80:80"
+
+volumes:
+  db_data:
+
